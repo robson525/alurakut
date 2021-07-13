@@ -1,7 +1,7 @@
 import MainGrid from '../src/components/MainGrid'
 import Box from '../src/components/Box'
+import ProfileRelations from '../src/components/ProfileRelations'
 import { AlurakutMenu, OrkutNostalgicIconSet } from '../src/lib/AlurakutCommons';
-import { ProfileRelationsBoxWrapper } from '../src/components/ProfileRelations';
 
 function ProfileSidebar(propriedades) {
   return (
@@ -13,15 +13,7 @@ function ProfileSidebar(propriedades) {
 
 export default function Home() {
   const usuarioAleatorio = 'robson525';
-  const pessoasFavoritas = [
-    'juunegreiros',
-    'omariosouto',
-    'peas',
-    'rafaballerini',
-    'marcobrunodev',
-    'felipefialho'
-  ]
-
+  
   return (
     <>
       <AlurakutMenu githubUser={usuarioAleatorio} />
@@ -39,26 +31,8 @@ export default function Home() {
             <OrkutNostalgicIconSet />
           </Box>
         </div>
-        <div className="profileRelationsArea" style={{ gridArea: 'profileRelationsArea' }}>
-          <ProfileRelationsBoxWrapper>
-            <h2 className="smallTitle">
-              Pessoas da comunidade ({pessoasFavoritas.length})
-            </h2>
-
-            <ul>
-              {pessoasFavoritas.map((itemAtual) => {
-                return (
-                  <li key={`id-${itemAtual}`} >
-                    <a href={`/users/${itemAtual}`} key={itemAtual}>
-                      <img src={`https://github.com/${itemAtual}.png`} />
-                      <span>{itemAtual}</span>
-                    </a>
-                  </li>
-                )
-              })}
-            </ul>
-          </ProfileRelationsBoxWrapper>
-        </div>
+        <ProfileRelations />
+        
       </MainGrid>
     </>
   )
