@@ -1,58 +1,34 @@
 import styled from 'styled-components';
-import React, { useState, useEffect } from 'react';
 import Box from '../Box';
 
-export default function ProfileRelations() {
+export default function ProfileRelations({ title, itens, seeAllLink}) {
+        
+  return (    
+      <ProfileRelationsBoxWrapper>
+        <h2 className="smallTitle">
+          {title} ({itens.length})
+        </h2>
 
-    const url = "https://api.github.com/users/juunegreiros/followers";
-    const [followers, setFollowers] = useState([]);
-
-    useEffect(() => {
-        fetch(url)
-        .then((resposta) => { return resposta.json() })
-        .then((json) => {
-            setFollowers(json);
-        });
-      }, []);
-
-    
-    return (
-        <div className="profileRelationsArea" style={{ gridArea: 'profileRelationsArea' }}>
-        <ProfileRelationsBoxWrapper>
-          <h2 className="smallTitle">
-            Pessoas da comunidade ({followers.length})
-          </h2>
-
-          <ul>
-            {followers.sort( () => .5 - Math.random() ) // reordena randomicamente
-            .slice(0, 6).map((follower) => { // pega as 6 primeiras
-              return (
-                <li key={`id-${follower.id}`} >
-                  <a href={`/users/${follower.login}`} key={follower.login}>
-                    <img src={`https://github.com/${follower.login}.png`} />
-                    <span>{follower.login}</span>
-                  </a>
-                </li>
-              )
-            })}
-          </ul>
-            
-          <br />
-          <a className="seeAll" href={`${url}`} target="_blank">Ver Todos</a>
-        </ProfileRelationsBoxWrapper>
-      </div>
-    )
-  }
+        <ul>
+          {itens.slice(0, 6).map((item) => { // pega as 6 primeiras
+            return (
+              <li key={`${item.id}`} >
+                <a href={`${item.href}`} target="_blank">
+                  <img src={`${item.img}`} />
+                  <span>{item.title}</span>
+                </a>
+              </li>
+            )
+          })}
+        </ul>
+          
+        <br />
+        <a className="boxLink" href={`${seeAllLink}`} target="_blank">Ver Todos</a>
+      </ProfileRelationsBoxWrapper>
+  )
+}
 
 const ProfileRelationsBoxWrapper = styled(Box)`
-  .seeAll {
-    font-weight: 700;
-    font-family: Verdana;
-    font-size: 14px;
-    text-decoration: none;
-    color: #2e7bb4;
-  }
-  
   ul {
     display: grid;
     grid-gap: 8px;
