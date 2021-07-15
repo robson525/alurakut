@@ -1,8 +1,64 @@
+import React, { useState, useEffect } from 'react'
+import { GraphQLClient } from "graphql-request"
+
 import MainGrid from '../src/components/MainGrid'
 import Box from '../src/components/Box'
 import ProfileRelations from '../src/components/ProfileRelations'
-import React, { useState, useEffect } from 'react';
-import { AlurakutMenu, OrkutNostalgicIconSet, AlurakutProfileSidebarMenuDefault } from '../src/lib/AlurakutCommons';
+import { AlurakutMenu, OrkutNostalgicIconSet, AlurakutProfileSidebarMenuDefault } from '../src/lib/AlurakutCommons'
+
+const myUser = 'robson525';
+const datocmsToken = "fd8cea1b404857daadfb5dc658ae79";
+const datocmsurl = "https://graphql.datocms.com/";
+const followersUrl = "https://api.github.com/users/juunegreiros/followers";
+const communitiesUrl = "../src/assets/json/communities.json";
+const communitiePeopleUrl = "https://api.github.com/users/peas/followers";
+
+
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
+function getGitGollowers(url, set){
+  fetch(url)
+  .then((resposta) => { return resposta.json() })
+  .then((json) => {
+    set(json.sort( () => .5 - Math.random()).map((follower) => { 
+        return {
+          id: follower.id,
+          title: follower.login,
+          img: follower.html_url + ".png",
+          href: follower.html_url,
+        };
+      }));
+  });
+}
+
+function getDatocmsInfo(set) {
+  fetch(
+    datocmsurl,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${datocmsToken}`,
+      },
+      body: JSON.stringify({
+        query: '{ allCommunities { id, title, img, href} }'
+      }),
+    }
+  )
+  .then(res => res.json())
+  .then((res) => {
+    set(res.data.allCommunities.sort(() => .5 - Math.random()))
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+}
+
 
 function ProfileSidebar(propriedades) {
   return (
@@ -23,45 +79,29 @@ function ProfileSidebar(propriedades) {
 }
 
 export default function Home() {
-  const usuarioAleatorio = 'robson525';
-  const followersUrl = "https://api.github.com/users/juunegreiros/followers";
-  const communitiesUrl = "../src/assets/json/communities.json";
-
+  
   const [followers, setFollowers] = useState([]);
   const [communities, setCommunities] = useState([]);
+  const [communitiePeople, setCommunitiePeople] = useState([]);
 
   useEffect(() => {
-      fetch(followersUrl)
-      .then((resposta) => { return resposta.json() })
-      .then((json) => {
-          setFollowers(json.sort( () => .5 - Math.random()).map((follower) => { 
-            return {
-              id: follower.id,
-              title: follower.login,
-              img: follower.html_url + ".png",
-              href: follower.html_url,
-            };
-          }));
-      });
 
-      setCommunities(require(`../src/assets/json/communities.json`).sort( () => .5 - Math.random()));
+    getGitGollowers(followersUrl, setFollowers);
 
-    }, []);
-
-  function getRandomInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min)) + min;
-  }
-
+    getGitGollowers(communitiePeopleUrl, setCommunitiePeople);
+    
+    getDatocmsInfo(setCommunities);
+     
+  }, []);
+  
   return (
     <>
-      <AlurakutMenu githubUser={usuarioAleatorio} />
+      <AlurakutMenu githubUser={myUser} />
 
       <MainGrid>
 
         <div className="profileArea" style={{ gridArea: 'profileArea' }}>
-          <ProfileSidebar githubUser={usuarioAleatorio} />
+          <ProfileSidebar githubUser={myUser} />
         </div>
 
         <div className="welcomeArea" style={{ gridArea: 'welcomeArea' }}>
@@ -116,9 +156,11 @@ export default function Home() {
         </div>
 
         <div className="profileRelationsArea" style={{ gridArea: 'profileRelationsArea' }}>
-          <ProfileRelations title="Amigos" seeAllLink={followersUrl} itens={followers} />
+          <ProfileRelations title="Seguidores" seeAllLink={followersUrl} itens={followers} />
 
           <ProfileRelations title="Comunidades" seeAllLink={communitiesUrl} itens={communities} />
+
+          <ProfileRelations title="Pessoas da Comunidade" seeAllLink={communitiePeopleUrl} itens={communitiePeople} />
         </div>
         
       </MainGrid>

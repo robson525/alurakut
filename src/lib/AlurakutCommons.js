@@ -54,11 +54,12 @@ export function AlurakutMenu({ githubUser }) {
 }
 AlurakutMenu.Wrapper = styled.header`
   width: 100%;
-  background-color: #0C6EE8;
-  opacity: 0.9;
+  background: rgb(2,0,36);
+  background: linear-gradient(180deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 29%, rgba(0,212,255,1) 100%);
 
   .alurakutMenuProfileSidebar {
-    background: white;
+    background: rgb(2,0,36);
+    background: linear-gradient(0deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 29%, rgba(0,212,255,1) 100%);
     position: fixed;
     z-index: 100;
     padding: 46px;
@@ -76,6 +77,9 @@ AlurakutMenu.Wrapper = styled.header`
     > div {
       max-width: 400px;
       margin: auto;
+      background-color: white;
+      border-radius: 5px;
+      padding: 10px;
     }
     a {
       font-size: 18px;
@@ -97,7 +101,8 @@ AlurakutMenu.Wrapper = styled.header`
   }
 
   .container {
-    background-color: #0C6EE8;
+    background: rgb(2,0,36);
+    background: linear-gradient(180deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 29%, rgba(0,212,255,1) 100%);
     padding: 7px 16px;
     max-width: 1110px;
     margin: auto;
